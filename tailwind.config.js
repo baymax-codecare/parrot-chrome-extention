@@ -1,0 +1,81 @@
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+module.exports = {
+  mode: "jit",
+  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
+  darkMode: "class", // or 'media' or 'class'
+  theme: {
+    extend: {
+      colors: {
+        teal: {
+          50: "#cff6eb",
+          100: "#b2eee0",
+          200: "#7eddd1",
+          300: "#54c8c0",
+          400: "#35b3b2",
+          500: "#1f989e",
+          600: "#107c89",
+          700: "#066274",
+          800: "#004b5f",
+          900: "#003847",
+        },
+        slate: {
+          50: "#ddf5ee",
+          100: "#ceeae4",
+          200: "#b1d5d3",
+          300: "#8fbfbe",
+          400: "#74a4a8",
+          500: "#5f8a91",
+          600: "#4e717a",
+          700: "#2e595d",
+          800: "#17403e",
+          900: "#08221e",
+        },
+        emerald: {
+          50: "#c3f6e5",
+          100: "#9cedd2",
+          200: "#55dbb0",
+          300: "#27c595",
+          400: "#05b07d",
+          500: "#009469",
+          600: "#007756",
+          700: "#015b42",
+          800: "#023e2e",
+          900: "#022219",
+        },
+        green: {
+          50: "#cefcea",
+          100: "#b0f9d8",
+          200: "#77f3ae",
+          300: "#4ae486",
+          400: "#2fc471",
+          500: "#1ea460",
+          600: "#128451",
+          700: "#0c6541",
+          800: "#07452f",
+          900: "#04251b",
+        },
+        red: {
+          50: "#FFCFED",
+          100: "#FFACD2",
+          200: "#FF6E98",
+          300: "#FF3652",
+          400: "#F6144E",
+          500: "#EB005A",
+          600: "#DD0072",
+          700: "#CB0087",
+          800: "#B60095",
+          900: "#9F009A",
+        },
+      },
+      fontFamily: {
+        serif: ["Josefin Sans", ...defaultTheme.fontFamily.sans],
+        sans: ["Josefin Sans", ...defaultTheme.fontFamily.sans],
+      },
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [require("@tailwindcss/typography")],
+};
