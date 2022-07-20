@@ -7,7 +7,6 @@ type MainLayoutProps = {
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
   const location = useLocation();
-  console.log(location);
   return <div className="flex flex-col">
     <Header />
     {children}

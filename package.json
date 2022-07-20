@@ -5,6 +5,7 @@
   "dependencies": {
     "@craco/craco": "^6.4.5",
     "@heroicons/react": "^1.0.6",
+    "@reduxjs/toolkit": "^1.8.3",
     "@tailwindcss/typography": "^0.4.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
@@ -13,13 +14,18 @@
     "@types/node": "^16.11.45",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "@types/url-parse": "^1.4.8",
     "clsx": "^1.2.1",
     "cross-env": "^7.0.3",
+    "parse-path": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
+    "react-redux": "^8.0.2",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^4.0.3",
+    "redux": "^4.2.0",
+    "redux-thunk": "^2.4.1",
     "typescript": "^4.1.2",
     "web-vitals": "^2.1.4"
   },
@@ -48,7 +54,9 @@
     ]
   },
   "devDependencies": {
+    "@redux-devtools/core": "^3.13.1",
     "@types/chrome": "^0.0.193",
+    "@types/parse-path": "^5.0.0",
     "autoprefixer": "^9.8.8",
     "postcss": "^7.0.39",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",

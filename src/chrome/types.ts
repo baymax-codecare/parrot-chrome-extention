@@ -1,9 +1,10 @@
-export enum Sender {
+export enum SENDER {
   React,
   Content,
+  Background,
 }
 
 export interface ChromeMessage {
-  from: Sender;
+  from: SENDER;
   message: any;
 }

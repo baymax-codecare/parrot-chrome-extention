@@ -1,21 +1,56 @@
-export const getCurrentTabUrl = (
-  callback: (url: string | undefined) => void
-): void => {
-  const queryInfo = { active: true, lastFocusedWindow: true };
+import { ChromeMessage, SENDER } from "./types";
 
-  chrome.tabs &&
-    chrome.tabs.query(queryInfo, (tabs) => {
-      callback(tabs[0].url);
-    });
+export const executeContentScript = async (tabId: number) => {
+  await chrome.scripting.executeScript({
+    target: { tabId: tabId, allFrames: true },
+    files: ["static/js/content.js"],
+  });
 };
 
-export const getCurrentTabUId = (
-  callback: (url: number | undefined) => void
-): void => {
-  const queryInfo = { active: true, lastFocusedWindow: true };
+export const getCurrentTabUrl = (): Promise<string | undefined> => {
+  return new Promise<string | undefined>((resolve) => {
+    const queryInfo = { active: true, lastFocusedWindow: true };
 
-  chrome.tabs &&
-    chrome.tabs.query(queryInfo, (tabs) => {
-      callback(tabs[0].id);
-    });
+    chrome.tabs &&
+      chrome.tabs.query(queryInfo, (tabs) => {
+        resolve(tabs[0].url);
+      });
+  });
+};
+
+export const getCurrentTabUId = (): Promise<number | undefined> => {
+  return new Promise<number | undefined>((resolve) => {
+    const queryInfo = { active: true, currentWindow: true };
+
+    chrome.tabs &&
+      chrome.tabs.query(queryInfo, (tabs) => {
+        resolve(tabs[0].id);
+      });
+  });
+};
+
+/**
+ * @description send collection info message from background to content
+ * @param
+ */
+export const sendCollectionInfoMessage = async ({
+  tabId,
+  collectionSymbol,
+  traits,
+}: {
+  tabId: number;
+  collectionSymbol: string;
+  traits?: string;
+}) => {
+  const message: ChromeMessage = {
+    from: SENDER.Background,
+    message: JSON.stringify({
+      collectionSymbol,
+      traits,
+    }),
+  };
+
+  console.log("TabID", tabId);
+  console.log("Collection Message", message);
+  console.log(await chrome.tabs.sendMessage(tabId, message));
 };

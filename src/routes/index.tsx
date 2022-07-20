@@ -1,7 +1,13 @@
+import { MESSAGE_REQUEST_COLLECTION_INFO } from "@/chrome/consts"
+import { ChromeMessage, SENDER } from "@/chrome/types"
+import { getCurrentTabUId } from "@/chrome/utils"
 import { MainLayout } from "@/components/Layouts"
 import { Notifications } from "@/pages/Notifications"
 import { Sniper } from "@/pages/Sniper"
 import { TraitPricing } from "@/pages/TraitPricing"
+import { setCollectionSymbol } from "@/slices/chrome"
+import { useAppDispatch } from "@/stores/hook"
+import { useEffect } from "react"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
 
 const App = () => {
@@ -11,6 +17,27 @@ const App = () => {
 }
 
 export const AppRoutes = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function requestCollectionInfo() {
+      const message: ChromeMessage = {
+        from: SENDER.React,
+        message: MESSAGE_REQUEST_COLLECTION_INFO,
+      }
+
+      const tabId = await getCurrentTabUId();
+      if (!tabId) return;
+      await chrome.runtime.sendMessage(
+        message, (response) => {
+          dispatch(setCollectionSymbol(response.collectionSymbol))
+        }
+      );
+    }
+
+    requestCollectionInfo();
+  })
+
   const commonRoutes = [
     { path: '/', element: <Navigate to="/sniper" /> },
     {

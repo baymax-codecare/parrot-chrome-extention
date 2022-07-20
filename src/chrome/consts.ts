@@ -1,0 +1,4 @@
+export const MAGIC_EDEN_DOMAIN = "magiceden.io";
+
+export const MESSAGE_REQUEST_COLLECTION_INFO =
+  "MESSAGE_REQUEST_COLLECTION_INFO";
