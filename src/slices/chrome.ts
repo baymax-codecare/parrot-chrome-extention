@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  collectionSymbol: null,
-  collectionName: null,
-  url: null,
-  traits: null,
-  image: null,
+  collectionSymbol: "",
+  collectionName: "",
+  url: "",
+  traits: "",
+  image: "",
 };
 
 const chromeSlice = createSlice({
@@ -13,10 +13,16 @@ const chromeSlice = createSlice({
   initialState,
   reducers: {
     setCollectionSymbol: (state, action) => {
-      console.log("SET COLLECTION SYMBAL CALLED");
       return {
         ...state,
         collectionSymbol: action.payload,
+      };
+    },
+
+    setCollectionTraits: (state, action) => {
+      return {
+        ...state,
+        traits: action.payload,
       };
     },
   },
@@ -24,6 +30,6 @@ const chromeSlice = createSlice({
 
 const { reducer, actions } = chromeSlice;
 
-export const { setCollectionSymbol } = actions;
+export const { setCollectionSymbol, setCollectionTraits } = actions;
 
 export default reducer;

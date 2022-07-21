@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import { ErrorBoundary } from 'react-error-boundary';
+import { QueryClient, QueryClientProvider } from 'react-query'
+
 import { MemoryRouter as Router } from 'react-router-dom';
 import { Spinner } from '../components/Elements/Spinner';
 import { Provider } from "react-redux";
@@ -25,21 +27,25 @@ type AppProviderProps = {
 };
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-
+  const queryClient = new QueryClient()
   return (
     <Provider store={store}>
-      <React.Suspense
-        fallback={
-          <div className="flex items-center justify-center w-screen h-screen">
-            <Spinner size="xl" />
-          </div>
-        }
-      >
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Router>{children}</Router>
-        </ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
 
-      </React.Suspense>
+
+        <React.Suspense
+          fallback={
+            <div className="flex items-center justify-center w-screen h-screen">
+              <Spinner size="xl" />
+            </div>
+          }
+        >
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Router>{children}</Router>
+          </ErrorBoundary>
+
+        </React.Suspense>
+      </QueryClientProvider>
     </Provider>
   )
 }

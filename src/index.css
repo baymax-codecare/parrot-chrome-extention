@@ -24,6 +24,11 @@ body {
   height: 600px;
 }
 
+#root {
+  height: 100%;
+  zoom: 0.9;
+}
+
 /*
 * Customize Scrollbar
 */

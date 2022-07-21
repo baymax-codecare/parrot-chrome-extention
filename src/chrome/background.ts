@@ -1,7 +1,6 @@
-import { MESSAGE_REQUEST_COLLECTION_INFO } from "./consts";
+import { MESSAGE_REQUEST_COLLECTION_INFO, MESSAGE_URL_UPDATED } from "./consts";
 import { getAllInfo } from "./magic-eden";
 import { getCurrentTabUrl } from "./utils";
-
 import { ChromeMessage, SENDER } from "./types";
 
 export {};
@@ -27,7 +26,21 @@ chrome.runtime.onSuspend.addListener(() => {});
 
 chrome.tabs.onActivated.addListener(async function (activeInfo) {});
 
-chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {});
+chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
+  if (changeInfo.url) {
+    getCurrentTabUrl().then((url) => {
+      if (!url) return;
+      const collectionInfo = getAllInfo(url);
+      if (!collectionInfo) return;
+      chrome.runtime.sendMessage({
+        from: SENDER.Background,
+        type: MESSAGE_URL_UPDATED,
+        message: url,
+      });
+    });
+  }
+  return true;
+});
 
 /**
  * @description Handles the message from react app
@@ -45,7 +58,7 @@ const messagesFromReactAppListener = (
   if (
     sender.id === chrome.runtime.id &&
     message.from === SENDER.React &&
-    message.message === MESSAGE_REQUEST_COLLECTION_INFO
+    message.type === MESSAGE_REQUEST_COLLECTION_INFO
   ) {
     getCurrentTabUrl().then((url) => {
       if (!url) return;

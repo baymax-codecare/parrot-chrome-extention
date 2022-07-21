@@ -6,7 +6,6 @@ const messagesFromReactAppListener = (
   response: any
 ) => {
   if (sender.id === chrome.runtime.id && message.from === SENDER.Background) {
-    console.log("ContentINFO", message.message);
   }
   return true;
 };

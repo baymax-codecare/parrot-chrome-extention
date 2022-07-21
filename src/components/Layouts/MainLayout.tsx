@@ -1,13 +1,11 @@
-import { useLocation } from "react-router-dom";
-import { Header } from "../Elements/Header";
+import { Header } from "../Views/Header";
 
 type MainLayoutProps = {
   children: React.ReactNode;
 };
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-  const location = useLocation();
-  return <div className="flex flex-col">
+  return <div className="flex flex-col h-full">
     <Header />
     {children}
   </div>

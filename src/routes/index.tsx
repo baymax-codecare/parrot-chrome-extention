@@ -1,11 +1,10 @@
-import { MESSAGE_REQUEST_COLLECTION_INFO } from "@/chrome/consts"
+import { MESSAGE_REQUEST_COLLECTION_INFO, MESSAGE_URL_UPDATED } from "@/chrome/consts"
 import { ChromeMessage, SENDER } from "@/chrome/types"
-import { getCurrentTabUId } from "@/chrome/utils"
 import { MainLayout } from "@/components/Layouts"
 import { Notifications } from "@/pages/Notifications"
 import { Sniper } from "@/pages/Sniper"
 import { TraitPricing } from "@/pages/TraitPricing"
-import { setCollectionSymbol } from "@/slices/chrome"
+import { setCollectionSymbol, setCollectionTraits } from "@/slices/chrome"
 import { useAppDispatch } from "@/stores/hook"
 import { useEffect } from "react"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
@@ -19,22 +18,60 @@ const App = () => {
 export const AppRoutes = () => {
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    async function requestCollectionInfo() {
-      const message: ChromeMessage = {
-        from: SENDER.React,
-        message: MESSAGE_REQUEST_COLLECTION_INFO,
-      }
+  /**
+   * @description Message listener from background.js
+   * @param message 
+   * @param sender 
+   * @param sendResponse 
+   */
+  const messageFromBackgroundListener = (message: ChromeMessage,
+    sender: any,
+    sendResponse: any) => {
 
-      const tabId = await getCurrentTabUId();
-      if (!tabId) return;
-      await chrome.runtime.sendMessage(
-        message, (response) => {
-          dispatch(setCollectionSymbol(response.collectionSymbol))
-        }
-      );
+    // If url of tabs are updated
+    if (
+      sender.id === chrome.runtime.id &&
+      message.from === SENDER.Background &&
+      message.type === MESSAGE_URL_UPDATED
+    ) {
+      requestCollectionInfo()
+    }
+  }
+
+  /**
+   * Send message to background.js to get CollectionSymbol & Traits
+   */
+  async function requestCollectionInfo() {
+    const message: ChromeMessage = {
+      from: SENDER.React,
+      type: MESSAGE_REQUEST_COLLECTION_INFO,
     }
 
+    await chrome.runtime.sendMessage(
+      message, (response) => {
+        dispatch(
+          setCollectionSymbol(response.collectionSymbol)
+        )
+        dispatch(
+          setCollectionTraits(response.traits)
+        )
+      }
+    );
+  }
+
+  /**
+   * Attach Message Listener 
+   */
+  useEffect(() => {
+    chrome.runtime.onMessage.addListener(messageFromBackgroundListener)
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageFromBackgroundListener)
+    }
+  }, [])
+
+
+  // Fetch colletion info
+  useEffect(() => {
     requestCollectionInfo();
   })
 
