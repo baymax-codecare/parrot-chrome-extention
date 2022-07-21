@@ -35,6 +35,7 @@ export const NewListingNotification = () => {
                 <InputField label="Price Under" labelClassName="text-teal-800 text-lg" className="text-white bg-teal-800 rounded-md py-2 pr-4 border-teal-800 border text-right w-24" isRequired registration={register('priceUnder')} error={formState.errors['priceUnder']} />
                 <span className="text-lg text-teal-800 ml-2">SOL</span>
               </div>
+              <div className="h-[40px]"></div>
               <div className="flex items-center justify-center flex-col space-y-4 mt-4">
                 <button type="button" className=" bg-gradient-to-b from-teal-700 to-teal-800 border border-teal-800 text-white py-4 px-2 rounded-lg">
                   Setup Snipe Notification
