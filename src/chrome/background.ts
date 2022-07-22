@@ -63,7 +63,6 @@ const messagesFromReactAppListener = (
     getCurrentTabUrl().then((url) => {
       if (!url) return;
       const collectionInfo = getAllInfo(url);
-
       if (!collectionInfo) return;
       sendResponse(collectionInfo);
     });

@@ -1,5 +1,5 @@
 import parsePath from "parse-path";
-import { MAGIC_EDEN_DOMAIN } from "./consts";
+import { MAGIC_EDEN_DOMAINS } from "./consts";
 
 export type MagicEdenCollection = {
   collectionSymbol: string;
@@ -15,14 +15,12 @@ export function getAllInfo(
   if (!url) return null;
 
   const parsedUrl = parsePath(url);
-
   //
   // if not magic eden return
   //
-  if (parsedUrl.resource !== MAGIC_EDEN_DOMAIN) return null;
+  if (!MAGIC_EDEN_DOMAINS.includes(parsedUrl.resource)) return null;
 
   const pathnames = parsedUrl.pathname.split("/");
-
   // if not magic eden market place
   if (pathnames[1] !== "marketplace") return null;
 
