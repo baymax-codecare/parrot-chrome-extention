@@ -4,8 +4,10 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { MemoryRouter as Router } from 'react-router-dom';
-import { Spinner } from '../components/Elements/Spinner';
 import { Provider } from "react-redux";
+import { Toaster } from 'react-hot-toast';
+
+import { Spinner } from '../components/Elements/Spinner';
 import store from "../stores/store";
 
 const ErrorFallback = () => {
@@ -42,6 +44,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         >
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Router>{children}</Router>
+            <Toaster />
           </ErrorBoundary>
 
         </React.Suspense>

@@ -1,11 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  collectionSymbol: "",
-  collectionName: "",
-  url: "",
-  traits: "",
-  image: "",
+type InitialStateType = {
+  collectionSymbol: string | undefined;
+  collectionName: string | undefined;
+  url: string | undefined;
+  traits: string | undefined;
+  image: string | undefined;
+};
+
+const initialState: InitialStateType = {
+  collectionSymbol: undefined,
+  collectionName: undefined,
+  url: undefined,
+  traits: undefined,
+  image: undefined,
 };
 
 const chromeSlice = createSlice({

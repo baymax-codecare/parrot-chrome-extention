@@ -10,7 +10,9 @@ axios.interceptors.response.use(
   (error) => {
     const message = error.response?.data?.message || error.message;
 
-    toast.error(message);
+    // Toast error message if not exceed limits
+    // We are handling 429 in other place
+    if (error.response.status !== 429) toast.error(message);
 
     return Promise.reject(error);
   }

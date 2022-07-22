@@ -8,7 +8,6 @@ import Select, { StylesConfig } from 'react-select'
 function parseTraits(traitsJSON: string) {
 
   const traitsData = JSON.parse(traitsJSON);
-  console.log(traitsData);
 
   let traits: string[] = [];
   for (let key of Object.keys(traitsData)) {
@@ -34,7 +33,6 @@ export const Traits = () => {
   )
 
   const traits = parseTraits(traitsJSON);
-  console.log(traits);
   const options = traits.map((trait) => ({ value: trait, label: trait }))
 
   const customStyles: StylesConfig = {

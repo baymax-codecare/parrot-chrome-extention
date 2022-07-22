@@ -3,8 +3,8 @@ import { useGetCollectionDetail } from "@/services/magic-eden/getCollectionDetai
 import { useAppSelector } from "@/stores/hook"
 
 export const Collection = () => {
-  const { collectionSymbol } = useAppSelector((state) => state.chrome)
-  const { traits } = useAppSelector((state) => state.chrome)
+  let { collectionSymbol } = useAppSelector((state) => state.chrome)
+
   const getCollectionDetail = useGetCollectionDetail({ collectionSymbol });
 
   if (getCollectionDetail.isLoading) {

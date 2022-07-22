@@ -50,7 +50,5 @@ export const sendCollectionInfoMessage = async ({
     }),
   };
 
-  console.log("TabID", tabId);
-  console.log("Collection Message", message);
-  console.log(await chrome.tabs.sendMessage(tabId, message));
+  await chrome.tabs.sendMessage(tabId, message);
 };
