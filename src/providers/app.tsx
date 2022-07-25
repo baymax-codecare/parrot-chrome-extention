@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'react-error-boundary';
 import { QueryClient, QueryClientProvider } from 'react-query'
 
@@ -8,7 +9,7 @@ import { Provider } from "react-redux";
 import { Toaster } from 'react-hot-toast';
 
 import { Spinner } from '../components/Elements/Spinner';
-import store from "../stores/store";
+import store, { persister } from "../stores/store";
 
 const ErrorFallback = () => {
   return (
@@ -32,23 +33,23 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const queryClient = new QueryClient()
   return (
     <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
+      <PersistGate loading={null} persistor={persister}>
+        <QueryClientProvider client={queryClient}>
+          <React.Suspense
+            fallback={
+              <div className="flex items-center justify-center w-screen h-screen">
+                <Spinner size="xl" />
+              </div>
+            }
+          >
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Router>{children}</Router>
+              <Toaster />
+            </ErrorBoundary>
 
-
-        <React.Suspense
-          fallback={
-            <div className="flex items-center justify-center w-screen h-screen">
-              <Spinner size="xl" />
-            </div>
-          }
-        >
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <Router>{children}</Router>
-            <Toaster />
-          </ErrorBoundary>
-
-        </React.Suspense>
-      </QueryClientProvider>
+          </React.Suspense>
+        </QueryClientProvider>
+      </PersistGate>
     </Provider>
   )
 }

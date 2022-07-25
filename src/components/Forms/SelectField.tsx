@@ -15,12 +15,13 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   defaultValue?: string;
   placeholder?: string;
   registration: Partial<UseFormRegisterReturn>;
+  isFull?: boolean
 };
 
 export const SelectField = (props: SelectFieldProps) => {
-  const { label, options, error, className, defaultValue, registration, placeholder } = props;
+  const { label, options, error, className, defaultValue, registration, placeholder, isFull } = props;
   return (
-    <FieldWrapper label={label} error={error}>
+    <FieldWrapper label={label} error={error} isFull={isFull}>
       <select
         placeholder={placeholder}
         name="location"

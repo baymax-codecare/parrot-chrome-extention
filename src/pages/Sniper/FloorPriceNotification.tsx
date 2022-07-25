@@ -1,22 +1,34 @@
 import { Form, InputField, SelectField } from "@/components/Forms"
-import { Traits } from "@/components/Views/Traits"
+import { addFPNotification } from "@/slices/notification";
+import { useAppDispatch, useAppSelector } from "@/stores/hook";
+import { nanoid } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 import * as z from 'zod';
 
 const schema = z.object({
-  floorPrice: z.number().positive(),
-  isUpOrDown: z.string()
+  floorPrice: z.number({
+    invalid_type_error: "Please provide correct number",
+    required_error: "Value is required"
+  })
+    .or(z.string().regex(/\d+/, { message: "Please provide correct number" }).transform(Number))
+    .refine((n) => n >= 0, { message: 'value was less than 0' }),
+  isGreatOrLess: z.string().or(z.number())
 })
 
 type CreateFPNotificationDTO = {
   floorPrice: number,
-  isOverOrUnder: string;
+  isGreatOrLess: string;
 }
 
 export const FloorPriceNotification = () => {
+  const dispatch = useAppDispatch();
+  const collectionName = useAppSelector((state) => state.chrome.collectionName)
+  const traits = useAppSelector((state) => state.chrome.traits)
+  const floorPrice = useAppSelector((state) => state.chrome.floorPrice)
 
   const selectOptions = [
-    { label: "Price Over", value: "over" },
-    { label: "Price Under", value: "under" }
+    { label: "Price Under", value: -1 },
+    { label: "Price Over", value: 1 },
   ]
 
   return <>
@@ -31,21 +43,31 @@ export const FloorPriceNotification = () => {
       <Form<CreateFPNotificationDTO, typeof schema>
         onSubmit={
           async (values: CreateFPNotificationDTO) => {
-            console.log(values)
+            console.log("SUBMIT VALUES", values)
+            dispatch(addFPNotification({
+              id: nanoid(),
+              collectionName,
+              traits,
+              comparedPrice: values.floorPrice,
+              floorPrice,
+              isGreatOrLess: values.isGreatOrLess
+            }))
+            toast.success("Successfully created floor price notification")
           }
         }
         schema={schema}
       >
         {({ register, formState }) => (
           <>
-            <div className="mt-4 flex flex-col items-center">
-              <SelectField className="bg-teal-800 text-white mb-4 w-[135px]" options={selectOptions} registration={register('isOverOrUnder')} error={formState.errors['isOverOrUnder']} />
-              <div className="flex items-center justify-center w-[135px]">
-                <InputField className="text-white bg-teal-800 rounded-md py-2 pr-4 border-teal-800 border text-right w-24" isRequired registration={register('floorPrice')} error={formState.errors['floorPrice']} />
+            <div className="mt-4 flex flex-col items-center w-full">
+              <SelectField isFull={true} className="bg-teal-800 text-white mb-4 w-full" options={selectOptions} registration={register('isGreatOrLess')} error={formState.errors['isGreatOrLess']} />
+              <div className="flex items-end justify-center w-full">
+                <InputField className="w-full text-white bg-teal-800 rounded-md py-2 pr-4 border-teal-800 border text-right" isRequired registration={register('floorPrice')} />
                 <span className="text-lg text-teal-800 ml-2">SOL</span>
               </div>
-              <div className="flex items-center justify-center flex-col space-y-4 mt-4">
-                <button type="button" className="w-[135px] bg-gradient-to-b from-teal-700 to-teal-800 border border-teal-800 text-white py-4 px-2 rounded-lg">
+              {formState.errors['floorPrice'] && <div className="text-red-500 mt-2">{formState.errors['floorPrice'].message}</div>}
+              <div className="flex items-center justify-center flex-col space-y-4 mt-4 w-full">
+                <button type="submit" className="w-full bg-gradient-to-b from-teal-700 to-teal-800 border border-teal-800 text-white py-2 px-2 rounded-lg">
                   Setup FP Notification
                 </button>
 

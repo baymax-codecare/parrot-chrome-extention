@@ -70,7 +70,7 @@ export const AppRoutes = () => {
   }, [])
 
 
-  // Fetch colletion info
+  // Fetch collection info
   useEffect(() => {
     requestCollectionInfo();
   })

@@ -26,10 +26,10 @@ export const NoTraits = () => {
   </div>
 }
 
-export const Traits = () => {
+export const Traits = ({ isShowNoTrait = true }: { isShowNoTrait?: boolean }) => {
   const traitsJSON = useAppSelector((state) => state.chrome.traits)
 
-  if (!traitsJSON) return (<NoTraits />
+  if (!traitsJSON) return (<>{isShowNoTrait && <NoTraits />}</>
   )
 
   const traits = parseTraits(traitsJSON);

@@ -9,7 +9,7 @@ export const getCollectionDetail = ({
   if (!collectionSymbol) return new Promise((resolve) => resolve({}));
 
   return axios.get(
-    `https://api-mainnet.magiceden.io/collections/${collectionSymbol}?edge_cache=true&from_extension=true`
+    `https://api-mainnet.magiceden.io/v2/collections/${collectionSymbol}?edge_cache=true&from_extension=true`
   );
 };
 

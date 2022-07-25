@@ -1,0 +1,1 @@
+export const SOL_MAGIC_NUMBER = 1000000000;

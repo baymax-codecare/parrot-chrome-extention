@@ -6,6 +6,7 @@ type InitialStateType = {
   url: string | undefined;
   traits: string | undefined;
   image: string | undefined;
+  floorPrice: string | undefined;
 };
 
 const initialState: InitialStateType = {
@@ -14,6 +15,7 @@ const initialState: InitialStateType = {
   url: undefined,
   traits: undefined,
   image: undefined,
+  floorPrice: undefined,
 };
 
 const chromeSlice = createSlice({
@@ -33,11 +35,24 @@ const chromeSlice = createSlice({
         traits: action.payload,
       };
     },
+    setCollectionFP: (state, action) => ({
+      ...state,
+      floorPrice: action.payload,
+    }),
+    setCollectionName: (state, action) => ({
+      ...state,
+      collectionName: action.payload,
+    }),
   },
 });
 
 const { reducer, actions } = chromeSlice;
 
-export const { setCollectionSymbol, setCollectionTraits } = actions;
+export const {
+  setCollectionSymbol,
+  setCollectionTraits,
+  setCollectionFP,
+  setCollectionName,
+} = actions;
 
 export default reducer;

@@ -1,11 +1,21 @@
 import { Spinner } from "@/components/Elements/Spinner";
 import { useGetCollectionDetail } from "@/services/magic-eden/getCollectionDetail";
-import { useAppSelector } from "@/stores/hook"
+import { setCollectionFP, setCollectionName } from "@/slices/chrome";
+import { useAppDispatch, useAppSelector } from "@/stores/hook"
+import { useEffect } from "react";
 
 export const Collection = () => {
-  let { collectionSymbol } = useAppSelector((state) => state.chrome)
+  let collectionSymbol = useAppSelector((state) => state.chrome.collectionSymbol);
 
+  const dispatch = useAppDispatch();
   const getCollectionDetail = useGetCollectionDetail({ collectionSymbol });
+
+  useEffect(() => {
+    if (!getCollectionDetail.data) return;
+
+    dispatch(setCollectionName(getCollectionDetail.data.name))
+    dispatch(setCollectionFP(getCollectionDetail.data.floorPrice))
+  }, [getCollectionDetail, dispatch])
 
   if (getCollectionDetail.isLoading) {
     return <div className="flex">
@@ -16,6 +26,8 @@ export const Collection = () => {
   if (getCollectionDetail.isError) {
     return <div> Oops! Something went wrong</div>
   }
+
+
 
   const CollectionInfo = () => {
     if (getCollectionDetail.isSuccess) {

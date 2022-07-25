@@ -1,6 +1,7 @@
 import { Spinner } from "@/components/Elements/Spinner";
 import { Collection } from "@/components/Views/Collection"
 import { Footer } from "@/components/Views/Footer"
+import { Traits } from "@/components/Views/Traits";
 import { useGetSalesActivity } from "@/services/magic-eden/getSalesActivity";
 import { useAppSelector } from "@/stores/hook";
 import { useEffect, useRef, useCallback } from "react";
@@ -35,8 +36,8 @@ const TraitSaleHistory = (data: TraitSaleHistoryProps) => {
 }
 
 export const TraitPricing = () => {
-  const { traits } = useAppSelector((state) => state.chrome)
-  let { collectionSymbol } = useAppSelector((state) => state.chrome)
+  const traits = useAppSelector((state) => state.chrome.traits);
+  const collectionSymbol = useAppSelector((state) => state.chrome.collectionSymbol);
 
   const { data,
     fetchNextPage,
@@ -108,8 +109,9 @@ export const TraitPricing = () => {
   }
 
   return <div className="flex flex-col flex-1 min-h-0">
-    <div className="w-10/12 mx-auto">
+    <div className="w-10/12 mx-auto flex items-center">
       <Collection />
+      <Traits isShowNoTrait={false} />
     </div>
     <div className="flex-1 flex flex-col px-8 mt-2 min-h-0 overflow-y-auto overflow-x-hidden">
       {/* {dummyDataTraitPricing.map((data) => <TraitSaleHistory {...data} />)} */}
