@@ -47,7 +47,7 @@ export const TraitPricing = () => {
     isSuccess,
     isLoading,
     isError,
-    error,
+    // error,
     isLoadingError
   } = useGetSalesActivity({ collectionSymbol, traits, limit: 10 });
 
@@ -55,13 +55,13 @@ export const TraitPricing = () => {
 
   if (isError || isLoadingError) {
 
-    const errObj: any = error;
-    if (errObj.response.status === 429) {
-      toast.error("You have exceeded the requests in 1 min limit! Please try again soon.")
-    } else {
-      const message = errObj?.response?.data?.message || errObj?.message;
-      toast.error(message);
-    }
+    // const errObj: any = error;
+    // if (errObj.response.status === 429) {
+    //   toast.error("You have exceeded the requests in 1 min limit! Please try again soon.")
+    // } else {
+    //   const message = errObj?.response?.data?.message || errObj?.message;
+    //   toast.error(message);
+    // }
   }
 
   const SalesHistory = () => {
@@ -76,10 +76,13 @@ export const TraitPricing = () => {
     }
 
     if (isLoading) {
-      return <div className="flex items-center justify-center w-full"><Spinner /></div>
+      return <div>
+        <div className="flex items-center justify-center w-full"><Spinner /></div>
+
+      </div>
     }
 
-    return <div>Oops! Something went wrong</div>
+    return <div></div>
   }
 
   /**
@@ -114,11 +117,7 @@ export const TraitPricing = () => {
       <Collection />
       <Traits isShowNoTrait={false} />
     </div>
-    {tooManyRequest && <div className="flex flex-row items-center w-10/12 mx-auto">
-      <ExclamationIcon className="text-red-400 mr-2 w-16 h-16" />
-      <span className="font-bold text-red-400 text-xs">Too many requests to Magic Eden.
-        This could be a rare trait with not many recent sales.</span>
-    </div>}
+
     <div className="flex-1 flex flex-col px-8 mt-2 min-h-0 overflow-y-auto overflow-x-hidden">
       {/* {dummyDataTraitPricing.map((data) => <TraitSaleHistory {...data} />)} */}
       <div className="flex flex-col">
@@ -126,6 +125,11 @@ export const TraitPricing = () => {
         <InfiniteLoading />
       </div>
     </div>
+    {<div className="flex flex-row items-center w-10/12 mx-auto">
+      <ExclamationIcon className="text-red-400 mr-2 w-16 h-16" />
+      <span className="font-bold text-red-400 text-xs">Trait pricing is in beta and too many requests to Magic Eden API may cause it to fail.
+        Please try to reload if you get a infinite spinner. Our apologies!</span>
+    </div>}
     <Footer />
   </div>
 }

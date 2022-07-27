@@ -22,7 +22,7 @@ export const Spinner = ({ size = 'md', variant = 'primary', className = '' }: Sp
   return (
     <>
       <svg
-        className={clsx('animate-spin', sizes[size], variants[variant], className)}
+        className={clsx('animate-spin text-teal-800', sizes[size], variants[variant], className)}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
