@@ -4,16 +4,25 @@ import * as z from 'zod';
 import { Form, SelectField } from "@/components/Forms";
 import { ReactComponent as DiscordSVG } from '@/assets/images/discord-icon.svg';
 import { ReactComponent as TwitterSVG } from '@/assets/images/twitter.svg'
-import { useAppDispatch } from "@/stores/hook";
+import { useAppDispatch, useAppSelector } from "@/stores/hook";
 import { removeAllNotifications } from "@/slices/notification";
+import { SENDER } from "@/chrome/types";
+import { MESSAGE_SET_REFRESH_INTERVAL } from "@/chrome/consts";
+import toast from "react-hot-toast";
+import { setRefreshInterval } from "@/slices/chrome";
 
 
 const schema = z.object({
-  interval: z.number().positive(),
+  interval: z.number({
+    invalid_type_error: "Please provide correct number",
+    required_error: "Value is required"
+  })
+    .or(z.string().regex(/\d+/, { message: "Please provide correct number" }).transform(Number))
+    .refine((n) => n >= 0, { message: 'value was less than 0' }),
 })
 
 type ChangeRefreshIntervalDTO = {
-  interval: number;
+  interval: string;
 }
 
 export const Notifications = () => {
@@ -23,19 +32,21 @@ export const Notifications = () => {
     dispatch(removeAllNotifications());
   }
 
+  const defaultRefreshInterval = useAppSelector((state) => state.chrome.refreshInterval);
+
   const selectOptions = [
-    { label: "1 Min", value: 1000 * 60 * 1 },
-    { label: "5 Min", value: 1000 * 60 * 5 },
-    { label: "10 Min", value: 1000 * 60 * 10 },
-    { label: "20 Min", value: 1000 * 60 * 20 },
-    { label: "30 Min", value: 1000 * 60 * 30 },
-    { label: "1 Hrs", value: 1000 * 60 * 60 },
-    { label: "2 Hrs", value: 1000 * 60 * 60 * 2 },
-    { label: "3 Hrs", value: 1000 * 60 * 60 * 3 },
-    { label: "6 Hrs", value: 1000 * 60 * 60 * 6 },
-    { label: "12 Hrs", value: 1000 * 60 * 60 * 12 },
-    { label: "24 Hrs", value: 1000 * 60 * 60 * 24 },
-    { label: "48 Hrs", value: 1000 * 60 * 60 * 48 },
+    { label: "1 Min", value: 1 },
+    { label: "5 Min", value: 5 },
+    { label: "10 Min", value: 10 },
+    { label: "20 Min", value: 20 },
+    { label: "30 Min", value: 30 },
+    { label: "1 Hrs", value: 60 },
+    { label: "2 Hrs", value: 60 * 2 },
+    { label: "3 Hrs", value: 60 * 3 },
+    { label: "6 Hrs", value: 60 * 6 },
+    { label: "12 Hrs", value: 60 * 12 },
+    { label: "24 Hrs", value: 60 * 24 },
+    { label: "48 Hrs", value: 60 * 48 },
   ]
 
   return <div className="flex flex-col flex-1 min-h-0">
@@ -52,7 +63,13 @@ export const Notifications = () => {
       <Form<ChangeRefreshIntervalDTO, typeof schema>
         onSubmit={
           async (values: ChangeRefreshIntervalDTO) => {
-            console.log(values)
+            chrome.runtime.sendMessage({
+              from: SENDER.React,
+              type: MESSAGE_SET_REFRESH_INTERVAL,
+              message: values.interval
+            });
+            dispatch(setRefreshInterval(values.interval))
+            toast.success("Successfully updated refresh interval");
           }
         }
         schema={schema}
@@ -60,9 +77,9 @@ export const Notifications = () => {
         {({ register, formState }) => (
           <>
             <div className="mt-2 flex flex-col items-center">
-              <SelectField className="bg-teal-800 text-white mb-4 w-[135px]" options={selectOptions} registration={register('interval')} error={formState.errors['interval']} />
+              <SelectField className="bg-teal-800 text-white mb-4 w-[135px]" options={selectOptions} registration={register('interval')} error={formState.errors['interval']} defaultValue={defaultRefreshInterval} />
               <div className="flex items-center justify-center flex-col space-y-2">
-                <button type="button" className="w-[135px] bg-gradient-to-b from-teal-700 to-teal-800 border border-teal-800 text-white py-2 px-2 rounded-lg">
+                <button type="submit" className="w-[135px] bg-gradient-to-b from-teal-700 to-teal-800 border border-teal-800 text-white py-2 px-2 rounded-lg">
                   Submit
                 </button>
 
@@ -71,14 +88,14 @@ export const Notifications = () => {
                 </button>
 
                 <div className="flex items-center justify-center space-x-2">
-                  <button type="reset" className="flex items-center bg-white border border-white focus:border-white text-teal-800">
+                  <a target="_blank" href="http://discord.gg/parrotflock" className="flex items-center bg-white border border-white focus:border-white text-teal-800" rel="noreferrer">
                     <DiscordSVG className="text-teal-800 w-8 h-8 fill-current mr-2" />
                     Join Our Discord
-                  </button>
-                  <button type="reset" className="flex items-center bg-white border border-white focus:border-white text-teal-800">
+                  </a>
+                  <a href="https://twitter.com/parrottools" target="_blank" className="flex items-center bg-white border border-white focus:border-white text-teal-800" rel="noreferrer">
                     <TwitterSVG className="text-teal-800 w-8 h-8 fill-current mr-2" />
                     Follow us on Twitter
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>

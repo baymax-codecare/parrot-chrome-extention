@@ -1,13 +1,26 @@
-import { MESSAGE_REQUEST_COLLECTION_INFO, MESSAGE_URL_UPDATED } from "./consts";
+import {
+  ALARM_NAME,
+  MESSAGE_REQUEST_COLLECTION_INFO,
+  MESSAGE_SET_LISTING_NOTIFICATIONS,
+  MESSAGE_SET_FP_NOTIFICATIONS,
+  MESSAGE_URL_UPDATED,
+  MESSAGE_SET_REFRESH_INTERVAL,
+  MESSAGE_GET_REFRESH_INTERVAL,
+} from "./consts";
 import { getAllInfo } from "./magic-eden";
 import { getCurrentTabUrl } from "./utils";
 import { ChromeMessage, SENDER } from "./types";
+import storage from "./chrome-storage";
+import { initSetup } from "./scheduled-fetch";
 
 export {};
+
 /** Fired when the extension is first installed,
  *  when the extension is updated to a new version,
  *  and when Chrome is updated to a new version. */
-chrome.runtime.onInstalled.addListener((details) => {});
+chrome.runtime.onInstalled.addListener(async (details) => {
+  initSetup();
+});
 
 chrome.runtime.onConnect.addListener((port) => {});
 
@@ -54,7 +67,9 @@ const messagesFromReactAppListener = (
   sender: any,
   sendResponse: any
 ) => {
+  //
   // if request collection info
+  //
   if (
     sender.id === chrome.runtime.id &&
     message.from === SENDER.React &&
@@ -64,8 +79,53 @@ const messagesFromReactAppListener = (
       if (!url) return;
       const collectionInfo = getAllInfo(url);
       if (!collectionInfo) return;
+
       sendResponse(collectionInfo);
     });
+  }
+
+  if (
+    sender.id === chrome.runtime.id &&
+    message.from === SENDER.React &&
+    message.type === MESSAGE_GET_REFRESH_INTERVAL
+  ) {
+    storage.getRefreshInterval().then((interval) => {
+      sendResponse(interval);
+    });
+  }
+
+  //
+  // set listing notifications request
+  //
+  if (
+    sender.id === chrome.runtime.id &&
+    message.from === SENDER.React &&
+    message.type === MESSAGE_SET_LISTING_NOTIFICATIONS
+  ) {
+    storage.setListingNotifications(message.message);
+  }
+
+  //
+  // set floor price notifications request
+  //
+  if (
+    sender.id === chrome.runtime.id &&
+    message.from === SENDER.React &&
+    message.type === MESSAGE_SET_FP_NOTIFICATIONS
+  ) {
+    storage.setFPNotifications(message.message);
+  }
+
+  //
+  // set refresh interval
+  //
+  if (
+    sender.id === chrome.runtime.id &&
+    message.from === SENDER.React &&
+    message.type === MESSAGE_SET_REFRESH_INTERVAL
+  ) {
+    storage.setRefreshInterval(message.message);
+    initSetup();
   }
 
   return true;

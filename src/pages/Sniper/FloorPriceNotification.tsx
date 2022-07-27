@@ -1,4 +1,5 @@
 import { Form, InputField, SelectField } from "@/components/Forms"
+import { SOL_MAGIC_NUMBER } from "@/config";
 import { addFPNotification } from "@/slices/notification";
 import { useAppDispatch, useAppSelector } from "@/stores/hook";
 import { nanoid } from "@reduxjs/toolkit";
@@ -16,12 +17,14 @@ const schema = z.object({
 })
 
 type CreateFPNotificationDTO = {
-  floorPrice: number,
+  floorPrice: string,
   isGreatOrLess: string;
 }
 
 export const FloorPriceNotification = () => {
   const dispatch = useAppDispatch();
+
+  const collectionSymbol = useAppSelector((state) => state.chrome.collectionSymbol)
   const collectionName = useAppSelector((state) => state.chrome.collectionName)
   const traits = useAppSelector((state) => state.chrome.traits)
   const floorPrice = useAppSelector((state) => state.chrome.floorPrice)
@@ -43,12 +46,12 @@ export const FloorPriceNotification = () => {
       <Form<CreateFPNotificationDTO, typeof schema>
         onSubmit={
           async (values: CreateFPNotificationDTO) => {
-            console.log("SUBMIT VALUES", values)
             dispatch(addFPNotification({
               id: nanoid(),
               collectionName,
+              collectionSymbol,
               traits,
-              comparedPrice: values.floorPrice,
+              comparedPrice: parseFloat(values.floorPrice) * SOL_MAGIC_NUMBER,
               floorPrice,
               isGreatOrLess: values.isGreatOrLess
             }))

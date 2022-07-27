@@ -1,3 +1,4 @@
+import { PARROT_TITLE } from "./consts";
 import { ChromeMessage, SENDER } from "./types";
 
 export const executeContentScript = async (tabId: number) => {
@@ -51,4 +52,17 @@ export const sendCollectionInfoMessage = async ({
   };
 
   await chrome.tabs.sendMessage(tabId, message);
+};
+
+export type ChromeNotificationType = {
+  contextMessage: string;
+  title?: string;
+};
+export const sendChromeNotification = (message: ChromeNotificationType) => {
+  chrome.notifications.create({
+    message: message.contextMessage,
+    iconUrl: "../../logo192.png",
+    type: "basic",
+    title: message.title ?? PARROT_TITLE,
+  });
 };

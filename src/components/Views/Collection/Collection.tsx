@@ -2,6 +2,7 @@ import { Spinner } from "@/components/Elements/Spinner";
 import { useGetCollectionDetail } from "@/services/magic-eden/getCollectionDetail";
 import { setCollectionFP, setCollectionName } from "@/slices/chrome";
 import { useAppDispatch, useAppSelector } from "@/stores/hook"
+import { ExclamationIcon } from "@heroicons/react/outline";
 import { useEffect } from "react";
 
 export const Collection = () => {
@@ -34,12 +35,24 @@ export const Collection = () => {
       const data = getCollectionDetail.data;
 
       const { image, name } = data;
+      if (image && name) {
+        return (
+          <div className="flex flex-row items-center">
+            <img src={image} alt={name} className="w-16 h-16 mr-4 rounded-full" />
+
+            <div className="font-bold text-teal-800 text-lg">
+              {name}
+            </div>
+          </div>
+        )
+      }
+      // No data to show -> need to visit Magic Eden website
       return (
         <div className="flex flex-row items-center">
-          <img src={image} alt={name} className="w-16 h-16 mr-4 rounded-full" />
+          <ExclamationIcon className="text-red-400 mr-2 w-16 h-16" />
 
-          <div className="font-bold text-teal-800 text-lg">
-            {name}
+          <div className="font-bold text-red-400 text-xs">
+            Please visit a collection on Magic Eden to get started
           </div>
         </div>
       )

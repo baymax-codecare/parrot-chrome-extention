@@ -1,5 +1,6 @@
 import { Form, InputField } from "@/components/Forms"
 import { Traits } from "@/components/Views/Traits"
+import { SOL_MAGIC_NUMBER } from "@/config";
 import { addListingNotification } from "@/slices/notification";
 import { useAppDispatch, useAppSelector } from "@/stores/hook";
 import { nanoid } from "@reduxjs/toolkit";
@@ -22,6 +23,8 @@ type CreateListingNotificationDTO = {
 
 export const NewListingNotification = () => {
   const dispatch = useAppDispatch();
+
+  const collectionSymbol = useAppSelector((state) => state.chrome.collectionSymbol)
   const collectionName = useAppSelector((state) => state.chrome.collectionName)
   const traits = useAppSelector((state) => state.chrome.traits)
   const floorPrice = useAppSelector((state) => state.chrome.floorPrice)
@@ -40,10 +43,11 @@ export const NewListingNotification = () => {
           async (values: CreateListingNotificationDTO) => {
             dispatch(addListingNotification({
               id: nanoid(),
+              collectionSymbol,
               collectionName,
               traits,
-              comparedPrice: values.priceUnder,
-              floorPrice
+              comparedPrice: parseFloat(values.priceUnder) * SOL_MAGIC_NUMBER,
+              floorPrice,
             }))
             toast.success("Successfully created listing notification")
           }

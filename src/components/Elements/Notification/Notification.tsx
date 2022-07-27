@@ -19,7 +19,7 @@ export const Notification = (data: NotificationProp) => {
     <div className="grid grid-cols-1 divide-y divide-green-400 text-center w-full rounded-md">
       <div className="flex flex-col text-white">
         <div>{collectionName}</div>
-        <div>{collectionName} {isGreatOrLess === "1" ? '>' : '<'} {comparedPrice}</div>
+        <div>{collectionName} {isGreatOrLess === "1" ? '>' : '<'} {comparedPrice / SOL_MAGIC_NUMBER}</div>
       </div>
       <div className="my-2">
         <div className="text-white">

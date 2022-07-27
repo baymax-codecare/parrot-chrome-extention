@@ -7,6 +7,7 @@ type InitialStateType = {
   traits: string | undefined;
   image: string | undefined;
   floorPrice: string | undefined;
+  refreshInterval?: string;
 };
 
 const initialState: InitialStateType = {
@@ -16,6 +17,7 @@ const initialState: InitialStateType = {
   traits: undefined,
   image: undefined,
   floorPrice: undefined,
+  refreshInterval: undefined,
 };
 
 const chromeSlice = createSlice({
@@ -43,6 +45,10 @@ const chromeSlice = createSlice({
       ...state,
       collectionName: action.payload,
     }),
+    setRefreshInterval: (state, action) => ({
+      ...state,
+      refreshInterval: action.payload,
+    }),
   },
 });
 
@@ -53,6 +59,7 @@ export const {
   setCollectionTraits,
   setCollectionFP,
   setCollectionName,
+  setRefreshInterval,
 } = actions;
 
 export default reducer;

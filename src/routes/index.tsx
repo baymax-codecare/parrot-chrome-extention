@@ -1,11 +1,11 @@
-import { MESSAGE_REQUEST_COLLECTION_INFO, MESSAGE_URL_UPDATED } from "@/chrome/consts"
+import { MESSAGE_GET_REFRESH_INTERVAL, MESSAGE_REQUEST_COLLECTION_INFO, MESSAGE_SET_FP_NOTIFICATIONS, MESSAGE_SET_LISTING_NOTIFICATIONS, MESSAGE_URL_UPDATED } from "@/chrome/consts"
 import { ChromeMessage, SENDER } from "@/chrome/types"
 import { MainLayout } from "@/components/Layouts"
 import { Notifications } from "@/pages/Notifications"
 import { Sniper } from "@/pages/Sniper"
 import { TraitPricing } from "@/pages/TraitPricing"
-import { setCollectionSymbol, setCollectionTraits } from "@/slices/chrome"
-import { useAppDispatch } from "@/stores/hook"
+import { setCollectionSymbol, setCollectionTraits, setRefreshInterval } from "@/slices/chrome"
+import { useAppDispatch, useAppSelector } from "@/stores/hook"
 import { useEffect } from "react"
 import { Navigate, Outlet, useRoutes } from "react-router-dom"
 
@@ -17,6 +17,9 @@ const App = () => {
 
 export const AppRoutes = () => {
   const dispatch = useAppDispatch();
+
+  const listingNotifications = useAppSelector((state) => state.notification.listingNotifications);
+  const fpNotifications = useAppSelector((state) => state.notification.floorPriceNotifications);
 
   /**
    * @description Message listener from background.js
@@ -38,6 +41,20 @@ export const AppRoutes = () => {
     }
   }
 
+  useEffect(() => {
+    chrome.runtime.sendMessage({
+      from: SENDER.React,
+      type: MESSAGE_SET_LISTING_NOTIFICATIONS,
+      message: JSON.stringify(listingNotifications)
+    });
+
+    chrome.runtime.sendMessage({
+      from: SENDER.React,
+      type: MESSAGE_SET_FP_NOTIFICATIONS,
+      message: JSON.stringify(fpNotifications)
+    });
+  }, [listingNotifications, fpNotifications])
+
   /**
    * Send message to background.js to get CollectionSymbol & Traits
    */
@@ -55,13 +72,32 @@ export const AppRoutes = () => {
         dispatch(
           setCollectionTraits(response.traits)
         )
+
       }
     );
   }
 
   /**
-   * Attach Message Listener 
+   * @description Send message to get stored refresh interval
    */
+  async function requestRefreshInterval() {
+    const message: ChromeMessage = {
+      from: SENDER.React,
+      type: MESSAGE_GET_REFRESH_INTERVAL,
+    }
+
+    await chrome.runtime.sendMessage(
+      message, (refreshInterval) => {
+        dispatch(
+          setRefreshInterval(refreshInterval)
+        )
+      }
+    );
+  }
+
+  /**
+  * Attach Message Listener 
+  */
   useEffect(() => {
     chrome.runtime.onMessage.addListener(messageFromBackgroundListener)
     return () => {
@@ -73,6 +109,7 @@ export const AppRoutes = () => {
   // Fetch collection info
   useEffect(() => {
     requestCollectionInfo();
+    requestRefreshInterval();
   })
 
   const commonRoutes = [

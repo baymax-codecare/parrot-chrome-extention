@@ -7,7 +7,7 @@ export type MagicEdenCollection = {
 };
 
 /**
- * @description getAllInfo of a collection
+ * @description get collectionSymbol and traits from a collection
  */
 export function getAllInfo(
   url: string | undefined
