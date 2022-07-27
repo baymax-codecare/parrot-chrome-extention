@@ -1,6 +1,6 @@
 import { sendChromeNotification } from "./utils";
 import storage from "./chrome-storage";
-import { ALARM_NAME, SOL_MAGIC_NUMBER } from "./consts";
+import { ALARM_NAME, MAGIC_EDEN_DOMAIN, SOL_MAGIC_NUMBER } from "./consts";
 
 const alarmListener = (alarm: any) => {
   if (alarm.name === ALARM_NAME) {
@@ -56,6 +56,7 @@ async function listingNotification() {
     const message = purgeDuplicate.join(",");
     const contextMessage = `New NFT has been detected in ${message}`;
     sendChromeNotification({
+      id: `${MAGIC_EDEN_DOMAIN}/marketplace/${listedNotification[0].collectionSymbol}`,
       title: "NFT Detected",
       contextMessage,
     });
@@ -97,6 +98,7 @@ async function floorPriceNotification() {
     });
 
     sendChromeNotification({
+      id: `${MAGIC_EDEN_DOMAIN}/marketplace/${toNotifyNotification[0].collectionSymbol}`,
       title: "Parrot",
       contextMessage: contextMessage.join("\n"),
     });
@@ -225,10 +227,12 @@ export const isNftListed = async ({
     if (data.results && data.results.length > 0)
       return {
         collectionName,
+        collectionSymbol,
         isListed: true,
       };
     return {
       collectionName,
+      collectionSymbol,
       isListed: false,
     };
   } catch (err) {
@@ -264,6 +268,7 @@ export const checkNFTFloorPrice = async ({
       return {
         toNotify: true,
         collectionName,
+        collectionSymbol,
         comparedPrice,
         isGreatOrLess,
       };
@@ -272,6 +277,7 @@ export const checkNFTFloorPrice = async ({
     return {
       toNotify: false,
       collectionName,
+      collectionSymbol,
       comparedPrice,
       isGreatOrLess,
     };

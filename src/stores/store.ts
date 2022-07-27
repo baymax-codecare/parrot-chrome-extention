@@ -3,10 +3,12 @@ import storage from "redux-persist/lib/storage"; // defaults to localStorage for
 import { persistStore, persistReducer } from "redux-persist";
 import chromeReducer from "../slices/chrome";
 import notificationReducer from "../slices/notification";
+import meApiStatusReducer from "../slices/me-api-status";
 
 const rootReducer = combineReducers({
   chrome: chromeReducer,
   notification: notificationReducer,
+  meApiStatus: meApiStatusReducer,
 });
 
 const persistConfig = {

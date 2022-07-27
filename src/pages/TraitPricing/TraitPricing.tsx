@@ -4,6 +4,7 @@ import { Footer } from "@/components/Views/Footer"
 import { Traits } from "@/components/Views/Traits";
 import { useGetSalesActivity } from "@/services/magic-eden/getSalesActivity";
 import { useAppSelector } from "@/stores/hook";
+import { ExclamationIcon } from "@heroicons/react/outline";
 import { useEffect, useRef, useCallback } from "react";
 import toast from "react-hot-toast";
 
@@ -38,7 +39,7 @@ const TraitSaleHistory = (data: TraitSaleHistoryProps) => {
 export const TraitPricing = () => {
   const traits = useAppSelector((state) => state.chrome.traits);
   const collectionSymbol = useAppSelector((state) => state.chrome.collectionSymbol);
-
+  const tooManyRequest = useAppSelector((state) => state.meApiStatus.tooManyRequest);
   const { data,
     fetchNextPage,
     hasNextPage,
@@ -113,6 +114,11 @@ export const TraitPricing = () => {
       <Collection />
       <Traits isShowNoTrait={false} />
     </div>
+    {tooManyRequest && <div className="flex flex-row items-center w-10/12 mx-auto">
+      <ExclamationIcon className="text-red-400 mr-2 w-16 h-16" />
+      <span className="font-bold text-red-400 text-xs">Too many requests to Magic Eden.
+        This could be a rare trait with not many recent sales.</span>
+    </div>}
     <div className="flex-1 flex flex-col px-8 mt-2 min-h-0 overflow-y-auto overflow-x-hidden">
       {/* {dummyDataTraitPricing.map((data) => <TraitSaleHistory {...data} />)} */}
       <div className="flex flex-col">

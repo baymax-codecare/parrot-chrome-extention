@@ -55,11 +55,12 @@ export const sendCollectionInfoMessage = async ({
 };
 
 export type ChromeNotificationType = {
+  id: string;
   contextMessage: string;
   title?: string;
 };
 export const sendChromeNotification = (message: ChromeNotificationType) => {
-  chrome.notifications.create({
+  chrome.notifications.create(message.id, {
     message: message.contextMessage,
     iconUrl: "../../logo192.png",
     type: "basic",

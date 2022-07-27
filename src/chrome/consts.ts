@@ -19,3 +19,5 @@ export const ALARM_NAME = "ME_SNIPER";
 export const PARROT_TITLE = "PARROT";
 
 export const SOL_MAGIC_NUMBER = 1000000000;
+
+export const MAGIC_EDEN_DOMAIN = "https://magiceden.io";

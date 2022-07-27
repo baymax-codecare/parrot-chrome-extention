@@ -135,3 +135,7 @@ const messagesFromReactAppListener = (
  * Fired when a message is sent from either an extension process or a content script.
  */
 chrome.runtime.onMessage.addListener(messagesFromReactAppListener);
+
+chrome.notifications.onClicked.addListener(function (notifId) {
+  chrome.tabs.create({ url: notifId });
+});

@@ -68,10 +68,6 @@ export const NewListingNotification = () => {
                   <button type="submit" className="w-full bg-gradient-to-b from-teal-700 to-teal-800 border border-teal-800 text-white py-2 px-2 rounded-lg">
                     Setup Snipe Notification
                   </button>
-
-                  <button type="reset" className="bg-white border border-white focus:border-white text-teal-800">
-                    Clear
-                  </button>
                 </div>
               </div>
             </>
