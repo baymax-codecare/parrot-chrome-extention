@@ -152,6 +152,7 @@ export const useGetSalesActivity = ({
 
         return lastPage.offset;
       },
+      retry: 1,
     }
   );
 };
