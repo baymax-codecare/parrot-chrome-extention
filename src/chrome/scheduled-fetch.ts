@@ -3,7 +3,6 @@ import storage from "./chrome-storage";
 import { ALARM_NAME, MAGIC_EDEN_DOMAIN, SOL_MAGIC_NUMBER } from "./consts";
 
 function alarmListener(alarm: any) {
-  console.log("ALARM HAPPENED", alarm);
   if (alarm.name === ALARM_NAME) {
     snipeMagicEden();
   }
