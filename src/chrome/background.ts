@@ -125,7 +125,7 @@ const messagesFromReactAppListener = (
     message.type === MESSAGE_SET_REFRESH_INTERVAL
   ) {
     storage.setRefreshInterval(message.message);
-    initSetup();
+    initSetup(message.message);
   }
 
   return true;

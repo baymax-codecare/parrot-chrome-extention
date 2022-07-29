@@ -2,14 +2,17 @@ import { sendChromeNotification } from "./utils";
 import storage from "./chrome-storage";
 import { ALARM_NAME, MAGIC_EDEN_DOMAIN, SOL_MAGIC_NUMBER } from "./consts";
 
-const alarmListener = (alarm: any) => {
+function alarmListener(alarm: any) {
+  console.log("ALARM HAPPENED", alarm);
   if (alarm.name === ALARM_NAME) {
     snipeMagicEden();
   }
-};
+}
 
-export const initSetup = async () => {
-  const refreshInterval = await storage.getRefreshInterval();
+export const initSetup = async (interval?: number) => {
+  let refreshInterval = interval
+    ? interval
+    : await storage.getRefreshInterval();
   chrome.alarms.create(ALARM_NAME, {
     periodInMinutes: refreshInterval,
     delayInMinutes: 0.1,
