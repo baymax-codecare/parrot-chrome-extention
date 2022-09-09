@@ -40,7 +40,7 @@ const storage = {
       `${storagePrefix}-listing-notifications`
     );
 
-    if (!data) return JSON.stringify([]);
+    if (!data || data[`${storagePrefix}-listing-notifications`]) return JSON.stringify([]);
 
     return data[`${storagePrefix}-listing-notifications`];
   },
@@ -62,7 +62,7 @@ const storage = {
       `${storagePrefix}-fp-notifications`
     );
 
-    if (!data) return JSON.stringify([]);
+    if (!data || data[`${storagePrefix}-fp-notifications`]) return JSON.stringify([]);
 
     return data[`${storagePrefix}-fp-notifications`];
   },
