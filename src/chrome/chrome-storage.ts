@@ -40,9 +40,11 @@ const storage = {
       `${storagePrefix}-listing-notifications`
     );
 
-    if (!data || data[`${storagePrefix}-listing-notifications`]) return JSON.stringify([]);
+    const key = `${storagePrefix}-listing-notifications`
 
-    return data[`${storagePrefix}-listing-notifications`];
+    if (!data || !data[key]) return JSON.stringify([]);
+
+    return data[key];
   },
   /**
    * @description store json string of floor price notifications
@@ -62,7 +64,7 @@ const storage = {
       `${storagePrefix}-fp-notifications`
     );
 
-    if (!data || data[`${storagePrefix}-fp-notifications`]) return JSON.stringify([]);
+    if (!data || !data[`${storagePrefix}-fp-notifications`]) return JSON.stringify([]);
 
     return data[`${storagePrefix}-fp-notifications`];
   },
