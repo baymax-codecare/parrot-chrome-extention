@@ -12,7 +12,8 @@
     "webRequest",
     "notifications",
     "webNavigation",
-    "activeTab"
+    "activeTab",
+    "gcm"
   ],
   "host_permissions": [
     "https://*.magiceden.io/*",

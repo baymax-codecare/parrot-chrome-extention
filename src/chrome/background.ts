@@ -11,7 +11,7 @@ import { getAllInfo } from "./magic-eden";
 import { getCurrentTabUrl } from "./utils";
 import { ChromeMessage, SENDER } from "./types";
 import storage from "./chrome-storage";
-import { initSetup } from "./scheduled-fetch";
+// import { initSetup } from "./scheduled-fetch";
 
 export {};
 
@@ -19,7 +19,7 @@ export {};
  *  when the extension is updated to a new version,
  *  and when Chrome is updated to a new version. */
 chrome.runtime.onInstalled.addListener(async (details) => {
-  initSetup();
+  // initSetup();
 });
 
 chrome.runtime.onConnect.addListener((port) => {});
@@ -119,14 +119,14 @@ const messagesFromReactAppListener = (
   //
   // set refresh interval
   //
-  if (
-    sender.id === chrome.runtime.id &&
-    message.from === SENDER.React &&
-    message.type === MESSAGE_SET_REFRESH_INTERVAL
-  ) {
-    storage.setRefreshInterval(message.message);
-    initSetup(message.message);
-  }
+  // if (
+  //   sender.id === chrome.runtime.id &&
+  //   message.from === SENDER.React &&
+  //   message.type === MESSAGE_SET_REFRESH_INTERVAL
+  // ) {
+  //   storage.setRefreshInterval(message.message);
+  //   initSetup(message.message);
+  // }
 
   return true;
 };
