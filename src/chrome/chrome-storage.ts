@@ -3,70 +3,69 @@ import { DEFAULT_REFRESH_INTERVAL } from "@/config";
 const storagePrefix = "CHROME_PARROT_PREFIX";
 
 const storage = {
+  set: (key: string, value: string) => {
+    return chrome.storage.local.set({
+      [`${storagePrefix}-${key}`]: value
+    })
+  },
+
+  get: async (key: string):Promise<string | null> => {
+    const keyWithPrefix = `${storagePrefix}-${key}`
+    const value = await chrome.storage.local.get(keyWithPrefix)
+    if(!value || !value[keyWithPrefix]) return null
+
+    return value[keyWithPrefix]
+  },
+
   setRefreshInterval: async (interval: number) => {
-    await chrome.storage.local.set({
-      [`${storagePrefix}-refresh-interval`]: interval.toString(),
-    });
+    return storage.set('refresh-interval', interval.toString())
   },
   getRefreshInterval: async () => {
-    const data = await chrome.storage.local.get(
-      `${storagePrefix}-refresh-interval`
-    );
-
-    if (data && parseInt(data[`${storagePrefix}-refresh-interval`]))
-      return parseInt(data[`${storagePrefix}-refresh-interval`]);
-
-    await chrome.storage.local.set({
-      [`${storagePrefix}-refresh-interval`]: DEFAULT_REFRESH_INTERVAL,
-    });
-
-    return DEFAULT_REFRESH_INTERVAL;
+    return Number((await storage.get('refresh-interval')) || DEFAULT_REFRESH_INTERVAL)
   },
   /**
    * @description store json string of listing notifications
    * @param notifications json string of notifications
    */
   setListingNotifications: async (notifications: string) => {
-    await chrome.storage.local.set({
-      [`${storagePrefix}-listing-notifications`]: notifications,
-    });
+    return storage.set('listing-notifications', notifications)
   },
   /**
    *
    * @returns json string of listing notifications
    */
   getListingNotifications: async () => {
-    const data = await chrome.storage.local.get(
-      `${storagePrefix}-listing-notifications`
-    );
-
-    const key = `${storagePrefix}-listing-notifications`
-
-    if (!data || !data[key]) return JSON.stringify([]);
-
-    return data[key];
+    return (await storage.get('listing-notifications')) || '[]'
   },
   /**
    * @description store json string of floor price notifications
    * @param notifications json string of notifications
    */
   setFPNotifications: async (notifications: string) => {
-    await chrome.storage.local.set({
-      [`${storagePrefix}-fp-notifications`]: notifications,
-    });
+    return storage.set('fp-notifications', notifications)
   },
   /**
    *
    * @returns json string of floor price notifications
    */
   getFPNotifications: async () => {
-    const data = await chrome.storage.local.get(
-      `${storagePrefix}-fp-notifications`
-    );
+    return (await storage.get('fp-notifications')) || '[]'
+  },
 
-    if (!data || !data[`${storagePrefix}-fp-notifications`]) return JSON.stringify([]);
+  setNotificationToken: async (token: string) => {
+    return storage.set('notification-token', token)
+  },
 
-    return data[`${storagePrefix}-fp-notifications`];
+  getNotificationToken: async () => {
+    return (await storage.get('notification-token')) || ''
+  },
+
+  setUserIdentity: async (identity: string) => {
+    return storage.set('user-identity', identity)
+  },
+
+  getUserIdentity: async () => {
+    return (await storage.get('user-identity')) || ''
   },
 };
 

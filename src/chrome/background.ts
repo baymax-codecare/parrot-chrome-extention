@@ -119,14 +119,14 @@ const messagesFromReactAppListener = (
   //
   // set refresh interval
   //
-  // if (
-  //   sender.id === chrome.runtime.id &&
-  //   message.from === SENDER.React &&
-  //   message.type === MESSAGE_SET_REFRESH_INTERVAL
-  // ) {
-  //   storage.setRefreshInterval(message.message);
-  //   initSetup(message.message);
-  // }
+  if (
+    sender.id === chrome.runtime.id &&
+    message.from === SENDER.React &&
+    message.type === MESSAGE_SET_REFRESH_INTERVAL
+  ) {
+    storage.setRefreshInterval(message.message);
+    // initSetup(message.message);
+  }
 
   return true;
 };

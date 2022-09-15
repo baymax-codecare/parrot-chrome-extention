@@ -1,8 +1,9 @@
 // Firebase Cloud Messaging Configuration File. 
 // Read more at https://firebase.google.com/docs/cloud-messaging/js/client && https://firebase.google.com/docs/cloud-messaging/js/receive
 
+import storage from '@/chrome/chrome-storage';
 import { firebaseConfig, vapidKey } from '@/chrome/credentials';
-import { setNotificationToken } from '@/services/server';
+import { sendNotificationTokenRequest } from '@/services/server';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
@@ -27,10 +28,14 @@ export const requestForToken = async () => {
   if (!granted) return
 
   return getToken(messaging, { vapidKey })
-    .then((currentToken) => {
+    .then(async (currentToken) => {
       if (currentToken) {
         console.log('current token for client: ', currentToken);
-        setNotificationToken({ token: currentToken })
+        const { success, identity } = await sendNotificationTokenRequest({ token: currentToken })
+        if (!success) return
+
+        storage.setNotificationToken(currentToken)
+        storage.setUserIdentity(identity)
       } else {
         // Show permission request UI
         console.log('No registration token available. Request permission to generate one.');

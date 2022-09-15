@@ -1,9 +1,11 @@
+import storage from "@/chrome/chrome-storage"
 import { MESSAGE_GET_REFRESH_INTERVAL, MESSAGE_REQUEST_COLLECTION_INFO, MESSAGE_SET_FP_NOTIFICATIONS, MESSAGE_SET_LISTING_NOTIFICATIONS, MESSAGE_URL_UPDATED } from "@/chrome/consts"
 import { ChromeMessage, SENDER } from "@/chrome/types"
 import { MainLayout } from "@/components/Layouts"
 import { Notifications } from "@/pages/Notifications"
 import { Sniper } from "@/pages/Sniper"
 import { TraitPricing } from "@/pages/TraitPricing"
+import { sendNotificationsRequest } from "@/services/server"
 import { setCollectionSymbol, setCollectionTraits, setRefreshInterval } from "@/slices/chrome"
 import { useAppDispatch, useAppSelector } from "@/stores/hook"
 import { useEffect } from "react"
@@ -53,6 +55,8 @@ export const AppRoutes = () => {
       type: MESSAGE_SET_FP_NOTIFICATIONS,
       message: JSON.stringify(fpNotifications)
     });
+
+    sendNotificationList()
   }, [listingNotifications, fpNotifications])
 
   /**
@@ -75,6 +79,13 @@ export const AppRoutes = () => {
 
       }
     );
+  }
+
+  async function sendNotificationList() {
+    await sendNotificationsRequest({ data: {
+      listingNotifications,
+      fpNotifications
+    }})
   }
 
   /**

@@ -10,6 +10,7 @@ import { SENDER } from "@/chrome/types";
 import { MESSAGE_SET_REFRESH_INTERVAL } from "@/chrome/consts";
 import toast from "react-hot-toast";
 import { setRefreshInterval } from "@/slices/chrome";
+import { sendRefreshIntervalRequest } from "@/services/server";
 
 
 const schema = z.object({
@@ -69,6 +70,7 @@ export const Notifications = () => {
               message: values.interval
             });
             dispatch(setRefreshInterval(values.interval))
+            sendRefreshIntervalRequest({ refreshInterval: Number(values.interval) })
             toast.success("Successfully updated refresh interval");
           }
         }

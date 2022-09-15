@@ -1,6 +1,7 @@
+import storage from "@/chrome/chrome-storage";
 import { BACKEND_API } from "@/config";
 
-export const setNotificationToken = async ({
+export const sendNotificationTokenRequest = async ({
   token,
 }: {
   token: string | undefined;
@@ -8,7 +9,6 @@ export const setNotificationToken = async ({
   if (!token) return new Promise((resolve) => resolve({}));
 
   try {
-
     const data = await (
       await fetch(
         `${BACKEND_API}/notificationToken`,
@@ -27,24 +27,46 @@ export const setNotificationToken = async ({
   }
 };
 
-export const onFirebaseMessage = async ({
-  registrationId,
-  data
+export const sendRefreshIntervalRequest = async ({
+  refreshInterval
 }: {
-  registrationId: string | undefined;
-  data: any
+  refreshInterval: number
 }): Promise<any> => {
-  if (!registrationId) return new Promise((resolve) => resolve({}));
-
   try {
-
+    const identity = await storage.getUserIdentity()
     const responseData = await (
       await fetch(
-        `${BACKEND_API}/message`,
+        `${BACKEND_API}/refreshInterval`,
+        {
+          method: 'PUT', headers: {
+            'Content-Type': 'application/json'
+          }, body: JSON.stringify({ identity, refreshInterval })
+        }
+      )
+    ).json();
+    console.log('RESULT responseData', responseData)
+    return responseData
+  } catch (error) {
+    console.log(error)
+    return Promise.reject(error);
+  }
+};
+
+
+export const sendNotificationsRequest = async ({
+  data
+}: {
+  data: any
+}): Promise<any> => {
+  try {
+    const identity = await storage.getUserIdentity()
+    const responseData = await (
+      await fetch(
+        `${BACKEND_API}/notificationList`,
         {
           method: 'POST', headers: {
             'Content-Type': 'application/json'
-          }, body: JSON.stringify({ registrationId, data })
+          }, body: JSON.stringify({ identity, data })
         }
       )
     ).json();
