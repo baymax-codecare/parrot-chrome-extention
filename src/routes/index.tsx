@@ -82,6 +82,15 @@ export const AppRoutes = () => {
   }
 
   async function sendNotificationList() {
+    const listing = await storage.getListingNotifications()
+    const fp = await storage.getFPNotifications()
+
+    if(listing === JSON.stringify(listingNotifications)
+     && fp === JSON.stringify(fpNotifications)) return
+
+    await storage.setListingNotifications(JSON.stringify(listingNotifications))
+    await storage.setFPNotifications(JSON.stringify(fpNotifications))
+
     await sendNotificationsRequest({ data: {
       listingNotifications,
       fpNotifications

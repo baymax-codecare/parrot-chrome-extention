@@ -31,6 +31,9 @@ export const requestForToken = async () => {
     .then(async (currentToken) => {
       if (currentToken) {
         console.log('current token for client: ', currentToken);
+        const oldIdentity = await storage.getUserIdentity()
+        if (oldIdentity) return
+
         const { success, identity } = await sendNotificationTokenRequest({ token: currentToken })
         if (!success) return
 
