@@ -6,7 +6,7 @@ export const sendNotificationTokenRequest = async ({
 }: {
   token: string | undefined;
 }): Promise<any> => {
-  if (!token) return new Promise((resolve) => resolve({}));
+  if (!token) return
 
   try {
     const data = await (
@@ -34,6 +34,8 @@ export const sendRefreshIntervalRequest = async ({
 }): Promise<any> => {
   try {
     const identity = await storage.getUserIdentity()
+    if (!identity) return
+
     const responseData = await (
       await fetch(
         `${BACKEND_API}/refreshInterval`,
@@ -60,6 +62,8 @@ export const sendNotificationsRequest = async ({
 }): Promise<any> => {
   try {
     const identity = await storage.getUserIdentity()
+    if (!identity) return
+
     const responseData = await (
       await fetch(
         `${BACKEND_API}/notificationList`,
