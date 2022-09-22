@@ -3,6 +3,7 @@ import storage from "@/utils/storage";
 import { useInfiniteQuery } from "react-query";
 import _ from "lodash";
 import { off } from "process";
+import { HyperSpaceAttributes } from "@/chrome/hyperspace";
 
 export type CollectionDetail = {
   image: string;
@@ -45,10 +46,10 @@ type MetaDataAttribute = {
  */
 function isTraitMatch(
   metaDataAttributes: Array<MetaDataAttribute>,
-  checkingTrait: any
+  checkingTrait: HyperSpaceAttributes | undefined
 ) {
   if (!checkingTrait) return true;
-  if (checkingTrait === []) return true;
+  if (!checkingTrait || !checkingTrait.length) return true;
 
   const checkingTraitKeys = Object.keys(checkingTrait);
 
@@ -61,9 +62,10 @@ function isTraitMatch(
     .mapValues("value")
     .value();
 
-  for (const key in objToCompare) {
-    if (!checkingTrait[key].includes(objToCompare[key])) return false;
-  }
+  // TODO
+  // for (const key in objToCompare) {
+  //   if (!checkingTrait[key].includes(objToCompare[key])) return false;
+  // }
   return true;
 }
 
@@ -74,7 +76,7 @@ export const getSalesActivity = async ({
   limit = 100,
 }: {
   collectionSymbol: string | undefined;
-  traits: string | undefined;
+  traits: HyperSpaceAttributes | undefined;
   offset?: number;
   limit?: number;
 }): Promise<any> => {
@@ -101,11 +103,9 @@ export const getSalesActivity = async ({
       )
     );
 
-    const traitsObj = JSON.parse(traits ?? "{}");
-
     for (let i = 0; i < activities.length; i++) {
       // filter by traits
-      if (!isTraitMatch(metadata[i].attributes, traitsObj)) continue;
+      if (!isTraitMatch(metadata[i].attributes, traits)) continue;
 
       salesHistoryWithTraits.push({
         name: metadata[i].name,
@@ -133,7 +133,7 @@ export const useGetSalesActivity = ({
   limit = 10,
 }: {
   collectionSymbol: string | undefined;
-  traits: string | undefined;
+  traits: HyperSpaceAttributes | undefined;
   limit?: number;
 }) => {
   return useInfiniteQuery(

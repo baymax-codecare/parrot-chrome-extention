@@ -1,4 +1,5 @@
 import { DEFAULT_REFRESH_INTERVAL } from "@/config";
+import { HyperSpaceCollection } from "./hyperspace";
 
 const storagePrefix = "CHROME_PARROT_PREFIX";
 
@@ -9,12 +10,22 @@ const storage = {
     })
   },
 
-  get: async (key: string):Promise<string | null> => {
+  get: async (key: string): Promise<string | null> => {
     const keyWithPrefix = `${storagePrefix}-${key}`
     const value = await chrome.storage.local.get(keyWithPrefix)
-    if(!value || !value[keyWithPrefix]) return null
+    if (!value || !value[keyWithPrefix]) return null
 
     return value[keyWithPrefix]
+  },
+
+  setJSON: async (key: string, values: any) => {
+    return storage.set(key, JSON.stringify(values))
+  },
+
+  getJSON: async (key: string) => {
+    const data = await storage.get(key)
+    if (!data) return null
+    return JSON.parse(data)
   },
 
   setRefreshInterval: async (interval: number) => {
@@ -66,6 +77,13 @@ const storage = {
 
   getUserIdentity: async () => {
     return (await storage.get('user-identity')) || ''
+  },
+
+  setHSCondition: (condition: HyperSpaceCollection) => {
+    return storage.setJSON('hs-condition', condition)
+  },
+  getHSCondition: (): Promise<HyperSpaceCollection> => {
+    return storage.getJSON('hs-condition')
   },
 };
 

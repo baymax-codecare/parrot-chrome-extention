@@ -7,13 +7,14 @@ import {
   MESSAGE_SET_REFRESH_INTERVAL,
   MESSAGE_GET_REFRESH_INTERVAL,
 } from "./consts";
-import { getAllInfo } from "./magic-eden";
+import { getAllInfo } from "./hyperspace";
 import { getCurrentTabUrl } from "./utils";
 import { ChromeMessage, SENDER } from "./types";
 import storage from "./chrome-storage";
+import { hsClient } from "@/services/hyperspace";
 // import { initSetup } from "./scheduled-fetch";
 
-export {};
+export { };
 
 /** Fired when the extension is first installed,
  *  when the extension is updated to a new version,
@@ -22,9 +23,9 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   // initSetup();
 });
 
-chrome.runtime.onConnect.addListener((port) => {});
+chrome.runtime.onConnect.addListener((port) => { });
 
-chrome.runtime.onStartup.addListener(() => {});
+chrome.runtime.onStartup.addListener(() => { });
 
 /**
  *  Sent to the event page just before it is unloaded.
@@ -35,15 +36,16 @@ chrome.runtime.onStartup.addListener(() => {});
  *  If more activity for the event page occurs before it gets
  *  unloaded the onSuspendCanceled event will
  *  be sent and the page won't be unloaded. */
-chrome.runtime.onSuspend.addListener(() => {});
+chrome.runtime.onSuspend.addListener(() => { });
 
-chrome.tabs.onActivated.addListener(async function (activeInfo) {});
+chrome.tabs.onActivated.addListener(async function (activeInfo) { });
 
 chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
   if (changeInfo.url) {
     getCurrentTabUrl().then((url) => {
       if (!url) return;
       const collectionInfo = getAllInfo(url);
+
       if (!collectionInfo) return;
       chrome.runtime.sendMessage({
         from: SENDER.Background,
@@ -54,6 +56,19 @@ chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
   }
   return true;
 });
+
+chrome.webRequest.onBeforeRequest.addListener((details) => {
+  if (!details.requestBody?.raw) return
+  const { bytes } = details.requestBody?.raw[0]
+  if (!bytes) return
+  const decoder = new TextDecoder('utf-8')
+  const strBody = decoder.decode(bytes)
+  const bodyData = JSON.parse(strBody)
+  try {
+    const projectCondition = bodyData.variables.condition.project_ids[0]
+    storage.setHSCondition(projectCondition)
+  } catch (e) { }
+}, { urls: [hsClient.baseUrl] }, ['requestBody'])
 
 /**
  * @description Handles the message from react app
@@ -75,11 +90,10 @@ const messagesFromReactAppListener = (
     message.from === SENDER.React &&
     message.type === MESSAGE_REQUEST_COLLECTION_INFO
   ) {
-    getCurrentTabUrl().then((url) => {
+    getCurrentTabUrl().then(async (url) => {
       if (!url) return;
-      const collectionInfo = getAllInfo(url);
+      const collectionInfo = await getAllInfo(url);
       if (!collectionInfo) return;
-
       sendResponse(collectionInfo);
     });
   }

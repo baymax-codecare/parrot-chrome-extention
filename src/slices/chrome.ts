@@ -1,10 +1,11 @@
+import { HyperSpaceAttributes } from "@/chrome/hyperspace";
 import { createSlice } from "@reduxjs/toolkit";
 
 type InitialStateType = {
   collectionSymbol: string | undefined;
   collectionName: string | undefined;
   url: string | undefined;
-  traits: string | undefined;
+  traits: HyperSpaceAttributes | undefined;
   image: string | undefined;
   floorPrice: string | undefined;
   refreshInterval?: string;

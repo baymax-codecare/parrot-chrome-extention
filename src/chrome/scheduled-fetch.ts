@@ -1,6 +1,8 @@
 import { sendChromeNotification } from "./utils";
 import storage from "./chrome-storage";
-import { ALARM_NAME, MAGIC_EDEN_DOMAIN, SOL_MAGIC_NUMBER } from "./consts";
+import { ALARM_NAME, HYPER_SPACE_DOMAIN, SOL_MAGIC_NUMBER } from "./consts";
+
+// !!! Everything is deprecated.
 
 function alarmListener(alarm: any) {
   if (alarm.name === ALARM_NAME) {
@@ -58,7 +60,7 @@ async function listingNotification() {
     const message = purgeDuplicate.join(",");
     const contextMessage = `New NFT has been detected in ${message}`;
     sendChromeNotification({
-      id: `${MAGIC_EDEN_DOMAIN}/marketplace/${listedNotification[0].collectionSymbol}`,
+      id: `${HYPER_SPACE_DOMAIN}/collection/${listedNotification[0].collectionSymbol}`,
       title: "NFT Detected",
       contextMessage,
     });
@@ -100,7 +102,7 @@ async function floorPriceNotification() {
     });
 
     sendChromeNotification({
-      id: `${MAGIC_EDEN_DOMAIN}/marketplace/${toNotifyNotification[0].collectionSymbol}`,
+      id: `${HYPER_SPACE_DOMAIN}/collection/${toNotifyNotification[0].collectionSymbol}`,
       title: "Parrot",
       contextMessage: contextMessage.join("\n"),
     });

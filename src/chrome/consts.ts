@@ -1,4 +1,4 @@
-export const MAGIC_EDEN_DOMAINS = ["magiceden.io", "www.magiceden.io"];
+export const HYPER_SPACE_DOMAINS = ["hyperspace.xyz", "www.hyperspace.xyz"];
 
 export const MESSAGE_REQUEST_COLLECTION_INFO =
   "MESSAGE_REQUEST_COLLECTION_INFO";
@@ -20,4 +20,4 @@ export const PARROT_TITLE = "PARROT";
 
 export const SOL_MAGIC_NUMBER = 1000000000;
 
-export const MAGIC_EDEN_DOMAIN = "https://magiceden.io";
+export const HYPER_SPACE_DOMAIN = "https://hyperspace.xyz";

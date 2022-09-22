@@ -1,16 +1,14 @@
-import { axios } from "@/lib/axios";
 import { useQuery } from "react-query";
+import { hsClient, HSProjectStat } from "../hyperspace";
 
-export const getCollectionDetail = ({
+export const getCollectionDetail = async ({
   collectionSymbol,
 }: {
   collectionSymbol: string | undefined;
-}): Promise<any> => {
-  if (!collectionSymbol) return new Promise((resolve) => resolve({}));
+}): Promise<HSProjectStat | null> => {
+  if (!collectionSymbol) return null
 
-  return axios.get(
-    `https://api-mainnet.magiceden.io/v2/collections/${collectionSymbol}?edge_cache=true&from_extension=true`
-  );
+  return hsClient.getProjectStats(collectionSymbol)
 };
 
 export const useGetCollectionDetail = ({
