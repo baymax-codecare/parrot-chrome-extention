@@ -21,6 +21,7 @@
     "clsx": "^1.2.1",
     "cross-env": "^7.0.3",
     "firebase": "^9.9.4",
+    "humanize-duration": "^3.27.3",
     "loadash": "^1.0.0",
     "parse-path": "^5.0.0",
     "react": "^18.2.0",
@@ -80,6 +81,7 @@
   "devDependencies": {
     "@redux-devtools/core": "^3.13.1",
     "@types/chrome": "^0.0.193",
+    "@types/humanize-duration": "^3.27.1",
     "@types/parse-path": "^5.0.0",
     "@types/react-query": "^1.2.9",
     "autoprefixer": "^9.8.8",

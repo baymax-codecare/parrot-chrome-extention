@@ -60,7 +60,7 @@ export const Collection = () => {
           <ExclamationIcon className="text-red-400 mr-2 w-16 h-16" />
 
           <div className="font-bold text-red-400 text-xs">
-            Please visit a collection on Magic Eden to get started
+            Please visit a collection on Hyperspace to get started
           </div>
         </div>
       );

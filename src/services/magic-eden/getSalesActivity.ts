@@ -2,36 +2,37 @@ import { axios } from "@/lib/axios";
 import storage from "@/utils/storage";
 import { useInfiniteQuery } from "react-query";
 import _ from "lodash";
-import { off } from "process";
+import humanizeDuration from "humanize-duration";
 import { HyperSpaceAttributes } from "@/chrome/hyperspace";
+import { hsClient, HSMarketSnapshot } from "../hyperspace";
 
 export type CollectionDetail = {
   image: string;
   name: string;
 };
 
-export const getTokenMetadata = async ({
-  tokenMint,
-}: {
-  tokenMint: string;
-}) => {
-  let data = storage.getCollectionMeta(tokenMint);
+// export const getTokenMetadata = async ({
+//   tokenMint,
+// }: {
+//   tokenMint: string;
+// }) => {
+//   let data = storage.getCollectionMeta(tokenMint);
 
-  // if data exists in local storage
-  if (data) {
-    return new Promise((resolve) => resolve(data));
-  }
+//   // if data exists in local storage
+//   if (data) {
+//     return new Promise((resolve) => resolve(data));
+//   }
 
-  try {
-    data = await axios.get(
-      `https://api-mainnet.magiceden.io/v2/tokens/${tokenMint}?edge_cache=true&from_extension=true`
-    );
-    storage.setCollectionMeta(tokenMint, data);
-    return new Promise((resolve) => resolve(data));
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
+//   try {
+//     data = await axios.get(
+//       `https://api-mainnet.magiceden.io/v2/tokens/${tokenMint}?edge_cache=true&from_extension=true`
+//     );
+//     storage.setCollectionMeta(tokenMint, data);
+//     return new Promise((resolve) => resolve(data));
+//   } catch (error) {
+//     return Promise.reject(error);
+//   }
+// };
 
 type MetaDataAttribute = {
   trait_type: string;
@@ -79,7 +80,11 @@ export const getSalesActivity = async ({
   traits: HyperSpaceAttributes | undefined;
   offset?: number;
   limit?: number;
-}): Promise<any> => {
+}): Promise<{
+  offset: number,
+  length: number,
+  salesHistoryWithTraits: HSMarketSnapshot[]
+}> => {
   if (collectionSymbol === undefined) {
     return new Promise((resolve) =>
       resolve({
@@ -91,35 +96,25 @@ export const getSalesActivity = async ({
   }
 
   try {
-    let activities: Array<any> = await axios.get(
-      `https://api-mainnet.magiceden.io/v2/collections/${collectionSymbol}/activities?edge_cache=true&from_extension=true&offset=${offset}&limit=${limit}&type=buyNow`
-    );
-
-    let salesHistoryWithTraits: Array<any> = [];
-
-    const metadata: Array<any> = await Promise.all(
-      activities.map((element) =>
-        getTokenMetadata({ tokenMint: element.tokenMint })
-      )
-    );
-
-    for (let i = 0; i < activities.length; i++) {
-      // filter by traits
-      if (!isTraitMatch(metadata[i].attributes, traits)) continue;
-
-      salesHistoryWithTraits.push({
-        name: metadata[i].name,
-        image: metadata[i].image,
-        price: activities[i].price,
-        blockTime: activities[i].blockTime,
-      });
+    const activities = await hsClient.getProjectHistory(collectionSymbol, traits || [], offset / limit + 1, limit)
+    if (!activities) return {
+      offset: 0,
+      length: 0,
+      salesHistoryWithTraits: [],
     }
+
+    const now = Date.now()
+    activities.forEach(activity => {
+      const duration = now - activity.market_place_state.block_timestamp * 1000
+      activity.when = humanizeDuration(duration, { largest: 1 })
+      activity.thumbnail = `https://beta.api.solanalysis.com/images/100x100/filters:frames(,0)/${activity.meta_data_img}`
+    })
 
     return new Promise((resolve) =>
       resolve({
         offset: offset + activities.length,
         length: activities.length,
-        salesHistoryWithTraits,
+        salesHistoryWithTraits: activities,
       })
     );
   } catch (error) {
