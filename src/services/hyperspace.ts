@@ -2,7 +2,7 @@ import { HyperSpaceAttributes } from "@/chrome/hyperspace"
 
 export type HSProjectStat = {
   project_id: string,
-  flood_price: number
+  floor_price: number
   project: {
     img_url: string
     display_name: string

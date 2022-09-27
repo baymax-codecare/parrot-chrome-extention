@@ -18,6 +18,6 @@ export const ALARM_NAME = "ME_SNIPER";
 
 export const PARROT_TITLE = "PARROT";
 
-export const SOL_MAGIC_NUMBER = 1000000000;
+export const SOL_MAGIC_NUMBER = 1;
 
 export const HYPER_SPACE_DOMAIN = "https://hyperspace.xyz";

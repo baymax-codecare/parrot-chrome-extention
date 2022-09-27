@@ -17,7 +17,7 @@ export const Collection = () => {
     if (!getCollectionDetail.data) return;
 
     dispatch(setCollectionName(getCollectionDetail.data.project.display_name));
-    dispatch(setCollectionFP(getCollectionDetail.data.flood_price));
+    dispatch(setCollectionFP(getCollectionDetail.data.floor_price));
   }, [getCollectionDetail, dispatch]);
 
   if (getCollectionDetail.isLoading) {

@@ -150,6 +150,6 @@ const messagesFromReactAppListener = (
  */
 chrome.runtime.onMessage.addListener(messagesFromReactAppListener);
 
-chrome.notifications.onClicked.addListener(function (notifId) {
-  chrome.tabs.create({ url: notifId });
-});
+// chrome.notifications.onClicked.addListener(function (notifId) {
+//   chrome.tabs.create({ url: notifId });
+// });

@@ -23,7 +23,7 @@ export const Notification = (data: NotificationProp) => {
       </div>
       <div className="my-2">
         <div className="text-white">
-          Collection FP: {floorPrice / SOL_MAGIC_NUMBER} SOL
+          Collection FP: {floorPrice} SOL
         </div>
       </div>
     </div>
