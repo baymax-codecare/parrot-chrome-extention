@@ -1,13 +1,15 @@
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', function (event) {
   console.log('notificationclick', event)
   var redirect_url = event.notification.data.click_action;
   event.notification.close();
+  if (!redirect_url) return
+
   event.waitUntil(
     clients
       .matchAll({
         type: "window"
       })
-      .then(function(clientList) {
+      .then(function (clientList) {
         console.log(clientList);
         for (var i = 0; i < clientList.length; i++) {
           var client = clientList[i];
@@ -42,7 +44,7 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // Handle incoming messages while the app is not in focus (i.e in the background, hidden behind other tabs, or completely closed).
-messaging.onBackgroundMessage(function(payload) {
+messaging.onBackgroundMessage(function (payload) {
   const data = JSON.parse(payload.data['gcm.notification.data'])
   console.log('New Notifiaction', data)
   const notificationTitle = data.title
