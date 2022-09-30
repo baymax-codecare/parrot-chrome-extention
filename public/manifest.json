@@ -8,12 +8,9 @@
   "permissions": [
     "storage",
     "tabs",
-    "alarms",
     "webRequest",
     "notifications",
-    "webNavigation",
     "activeTab",
-    "gcm",
     "webRequest",
     "https://beta.api.solanalysis.com/graphql"
   ],
