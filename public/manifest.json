@@ -1,7 +1,7 @@
 {
   "short_name": "Parrot Sniper",
   "name": "Parrot: Solana NFT Sniper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "manifest_version": 3,
   "description": "",
   "icons": { "192": "./logo192.png" },
@@ -12,7 +12,7 @@
     "notifications",
     "activeTab",
     "webRequest",
-    "https://beta.api.solanalysis.com/graphql"
+    "https://beta.api.hyperspace.xyz/graphql"
   ],
   "host_permissions": [
     "https://*.hyperspace.xyz/*",

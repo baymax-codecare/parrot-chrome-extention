@@ -39,7 +39,7 @@ export type HSProjectHistoryResp = {
 }
 
 class HyperSpace {
-  baseUrl = 'https://beta.api.solanalysis.com/graphql'
+  baseUrl = 'https://beta.api.hyperspace.xyz/graphql'
 
   async getData(query: Record<string, any>) {
     let responseData: any
